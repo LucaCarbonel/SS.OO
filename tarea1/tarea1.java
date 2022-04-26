@@ -1,43 +1,35 @@
 import java.util.Scanner;
 import java.util.ArrayList;;
 
+// Cuida la indentacion!
 public class tarea1 {
 	public static void main(String[] args) {
-    Scanner entrada = new Scanner(System.in);
-    String nombre = "", mail = "", numero = "", busqueda;
-    boolean nombrebool, numerobool, mailbool, nom;
-    ArrayList<Contacto> contactos = new ArrayList<>();
+    // las variables definilas cerca del codigo donde la usas.\
+    // No es nada buena practica definirlas arriba.
 
+    // tenes que pensar en el scope, que para contactos entrada tiene 
+    // sentido que persista en cada iteracion del loop principal
+    Scanner entrada = new Scanner(System.in);
+    ArrayList<Contacto> contactos = new ArrayList<>();
+    
+    // te falta una pieza clave que es el while
+    while (true) {
     System.out.println("|-------------------AGENDA-------------------|");
     System.out.println("|-1 Ingresar un contacto                     |");
     System.out.println("|-2 Consultar un contacto ya existente       |");
-    System.out.println("|--------------------------------------------|");
-    System.out.println("");
-    System.out.println("Ingrese una opcion");
+    System.out.println("|--------------------------------------------|\n\nIngrese una opcion");
 
     int menu = entrada.nextInt();
     switch (menu) {
       case 1:
-      nombrebool = true;
-      numerobool = true;
-      mailbool = true;
-      nom=true;
-      while(nombrebool) {
-
-        if(!nom){
-        System.out.println("Ingrese el nombre del contacto [obligatorio]");
-        }
+      // Que complicaados todos esas flagas! Vamos por algo simple...
+      System.out.println("Ingrese el nombre del contacto [obligatorio]");
+      String nombre;
+      do {
         nombre = entrada.nextLine();
-        if(nombre.length() < 1) {
-            if(nom){
-              nom=false;
-            } else {
-            System.out.println("No ingreso nada pruebe denuevo");
-          }
-        } else {
-            nombrebool = false;
-        }
-      }
+      } while (nombre.isEmpty());
+
+      // idem para telefono....
       while(numerobool) {
         System.out.println("Ingrese el numero del contacto");
         numero = entrada.nextLine();
@@ -47,19 +39,12 @@ public class tarea1 {
             numerobool = false;
         }
       }
-      while(mailbool) {
+      // super complejo. Esto que te parece?
+      String mail;
+      do {
+        mail = input.nextLine();
+      } while (!nombre.isEmpty() && !mailIsValid(mail)); // supongo que defini esa funcion arriba mailIsValid 
 
-      System.out.println("Ingrese el mail del contacto [opcional]");
-      mail = entrada.nextLine();
-      if(mail.length() > 0){
-        if(mail.contains("@") && mail.contains(".")) {
-          mailbool = false;
-        } else {
-        System.out.println("Este no es un mail valido");}
-      } else {
-        mailbool = false;
-      }
-    }
         Contacto contacto = new Contacto( nombre, numero, mail);
         contactos.add(contacto);
         System.out.println(contacto);
@@ -67,13 +52,17 @@ public class tarea1 {
       case 2:
       System.out.println("Ingrese el nombre del contacto");
       System.out.println(contactos.size());
-      busqueda = entrada.next();
+      String busqueda = entrada.nextLine();
       for (int i=0; i < contactos.size() ; i++) {
-        System.out.println(contactos.get(i).getNombre());
+        // Aca falto otra pieza clave que es...
+        if (contactos.get(i).getNombre().equals(busqueda)) {
+          System.out.println(contactos.get(i).presentate());
+        }
       }
       break;
       default:
         break;
+    }
     }
   }
 }
@@ -106,4 +95,9 @@ public class tarea1 {
 	public void setNumero(String numero) {
 		this.numero = numero;
 	}
+
+  // para que se imprime
+  public String presentate() {
+    return "Contacto [nombre=" + nombre + ", mail=" + mail + ", numero=" + numero + "]";
+  }
 }
